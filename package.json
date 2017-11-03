@@ -11,8 +11,10 @@
   "license": "ISC",
   "description": "EhB Final Work CollegeFinder app",
   "dependencies": {
+    "@types/fs-extra": "^4.0.3",
     "debug": "^3.1.0",
     "express": "^4.16.2",
+    "fs-extra": "^4.0.2",
     "nodemon": "^1.12.1"
   },
   "devDependencies": {
