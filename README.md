@@ -47,7 +47,7 @@ $ docker build -t hansb/collegefinder .
 Deploy as a service
 $ docker stack deploy --compose-file=docker-compose.yml <service_name>
 Debug mode
-$ docker stack deploy --compose-file=docker-compose.yml --compose-file=docker-compose.debug.yml <service_name>
+$ docker stack deploy --compose-file=docker-compose.debug.yml <service_name>
 
 ## Run installation
 

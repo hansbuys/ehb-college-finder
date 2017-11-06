@@ -1,11 +1,18 @@
-version: '2.1'
+version: '3.1'
 
 services:
   collegefinder:
-    image: collegefinder
+    image: hansb/collegefinder
     environment:
-      NODE_ENV: development
+      - NODE_ENV=development
+      - COLLEGESCORECARD_API_KEY_SECRET_FILE=/run/secrets/collegescorecard_api_key
+    secrets:
+      - collegescorecard_api_key
     ports:
       - 3000:3000
       - 9229:9229
-    command: node --inspect dist/index.js
+    command: node --inspect=0.0.0.0:9229 dist/index.js
+    
+secrets:
+  collegescorecard_api_key:
+    external: true
