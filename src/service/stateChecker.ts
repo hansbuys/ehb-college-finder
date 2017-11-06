@@ -1,14 +1,13 @@
-import * as fs from 'fs-extra';
-import * as debug from 'debug'
+import { readFile } from 'fs-extra';
 
 export class StateChecker {
     public async exists(state: string): Promise<boolean> {     
-
-        var data = await fs.readFile('res/us-states.json', 'utf8');
-
+        var data = await readFile('res/us-states.json', 'utf8');
         var usStates : Array<State> = JSON.parse(data)
         
-        return usStates.some((s) => s.name === state || s.abbreviation === state)
+        return usStates.some((s) => 
+            s.name === state || 
+            s.abbreviation === state)
     }
 }
 
