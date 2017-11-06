@@ -13,8 +13,8 @@ describe('GET /find/by-state/:state', () => {
       .get('/find/by-state/Michigan')
       .end((err, res) => {
         expect(res.type).to.eql('application/json');
+        done()
       })
-    done()
   })
 
   const states = [
@@ -34,12 +34,13 @@ describe('GET /find/by-state/:state', () => {
           if (state.isAccepted) {
             expect(res).to.have.status(200)
             expect(res.body.message).to.eql(`Hello ${state.name}!`)
+            done()
           } else {
             expect(err).to.have.status(500)
             expect(err.response.text).to.contain(`${state.name} is not a US State.`)
+            done()
           }
         })
-      done()
     })
   })
 
