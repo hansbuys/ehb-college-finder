@@ -1,6 +1,10 @@
 import * as mocha from 'mocha'
 import * as chai from 'chai'
 import chaiHttp = require('chai-http')
+
+import mock = require('mock-require')
+mock('../src/service/collegeScorecard', './fakes/collegeScorecard')
+
 import app from '../src/App'
 
 chai.use(chaiHttp)
@@ -26,14 +30,16 @@ describe('GET /find/by-state/:state', () => {
     { name: "Belgium", isAccepted: false }
   ]
   states.forEach((state) => {
-    var whenAccepted = state.isAccepted ? '' : 'not '
-    it(`state parameter '${state.name}' should ${whenAccepted} be accepted`, (done) => {
+    var should = state.isAccepted ? 
+      'return status 200' : 
+      'return status 500 with error message'
+
+    it(`state parameter '${state.name}' should ${should}`, (done) => {
       chai.request(app)
         .get(`/find/by-state/${state.name}`)
         .end((err, res) => {
           if (state.isAccepted) {
             expect(res).to.have.status(200)
-            expect(res.body.message).to.eql(`Hello ${state.name}!`)
             done()
           } else {
             expect(err).to.have.status(500)
@@ -42,6 +48,17 @@ describe('GET /find/by-state/:state', () => {
           }
         })
     })
+  })
+
+  it('can get results based on location', (done) => {
+    chai.request(app)
+      .get('/find/by-state/Michigan')
+      .end((err, res) => {
+        expect(res.body).to.be.an('array')
+        expect(res.body[0]).to.have.property('name')
+        expect(res.body[0].name).to.eql('School in MI')
+        done()
+      })
   })
 
 })
