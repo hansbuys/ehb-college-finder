@@ -1,0 +1,11 @@
+version: '2.1'
+
+services:
+  collegefinder:
+    image: collegefinder
+    environment:
+      NODE_ENV: development
+    ports:
+      - 3000:3000
+      - 9229:9229
+    command: node --inspect dist/index.js
