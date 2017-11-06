@@ -16,7 +16,7 @@ describe('GET /find/by-state/:state', () => {
     chai.request(app)
       .get('/find/by-state/Michigan')
       .end((err, res) => {
-        expect(res.type).to.eql('application/json');
+        expect(res.type).to.eql('application/json')
         done()
       })
   })

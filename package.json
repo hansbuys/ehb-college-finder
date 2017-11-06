@@ -33,6 +33,7 @@
     "mock-require": "^2.0.2",
     "node": "^9.0.0",
     "ts-node": "^3.3.0",
+    "tslint": "^5.8.0",
     "typescript": "^2.6.1"
   }
 }

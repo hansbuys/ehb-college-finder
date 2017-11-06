@@ -1,25 +1,53 @@
 // example call : https://api.data.gov/ed/collegescorecard/v1/schools.json?school.state=MI&_fields=id,school.name&api_key=<api-key>
 import axios from 'axios'
-import { readFile } from 'fs-extra';
+import { readFile } from 'fs-extra'
 
 export class CollegeScorecardService {
-    public async getApiKey(): Promise<string> {
+    private baseUrl = "https://api.data.gov/ed/collegescorecard/v1/schools.json"
+
+    public getApiKey(): Promise<string> {
         let apiKeyFile = process.env.COLLEGESCORECARD_API_KEY_SECRET_FILE
-        let apiKey = await readFile(apiKeyFile, 'utf8')
-        return apiKey
+        return readFile(apiKeyFile, 'utf8')
     }
 
-    public async findSchoolsByState(stateCode: string): Promise<Array<string>> {
-        let apiKey = await this.getApiKey();
-        let url = `https://api.data.gov/ed/collegescorecard/v1/schools.json?school.state=${stateCode}&_fields=id,school.name&api_key=${apiKey}`
+    public async findSchoolNamesByState(stateCode: string): Promise<Array<string>> {
+        let apiKey = await this.getApiKey()
+        let page = 0
 
-        var schoolNames: Array<string> = await axios.get(url)
-            .then((result) => {
-                let schools: Array<any> = result.data.results
+        let moreResultsAvailable = true
 
-                return schools.map((school) => 
-                    school["school.name"])
-            })
+        var schoolNames: Array<string> = []
+
+        while (moreResultsAvailable) {
+            let url = this.baseUrl +
+                `?school.state=${stateCode}` +
+                "&_fields=school.name" +
+                `&api_key=${apiKey}` +
+                "&_per_page=100" +
+                `&_page=${page}`
+
+            await axios.get(url)
+                .then((result) => {
+                    let results: Array<any> = result.data.results
+                    let metadata = result.data.metadata
+
+                    let numberOfResults = metadata.total
+                    let currentPage = metadata.page
+                    let resultsPerPage = metadata.per_page
+
+                    let numberOfPages = Math.floor(numberOfResults / resultsPerPage)
+                    
+                    // zero based current page
+                    moreResultsAvailable = numberOfPages > currentPage 
+
+                    let currentSchoolNames = results.map((school) =>
+                        school["school.name"])
+
+                    schoolNames = schoolNames.concat(currentSchoolNames)
+                })
+
+            page++
+        }
 
         return schoolNames
     }

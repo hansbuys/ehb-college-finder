@@ -5,7 +5,7 @@ export class StateChecker {
 
     public async getAllStates(): Promise<Array<State>> {
         if (!this.allStates) {
-            var data = await readFile('res/us-states.json', 'utf8');
+            var data = await readFile('res/us-states.json', 'utf8')
             this.allStates = JSON.parse(data)
         }
         return this.allStates
@@ -26,7 +26,7 @@ export class StateChecker {
             s.name === state ||
             s.abbreviation === state)
 
-        return result.abbreviation;
+        return result.abbreviation
     }
 }
 

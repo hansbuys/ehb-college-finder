@@ -1,9 +1,9 @@
-import { Router, Request, Response, NextFunction } from 'express';
-import { StateChecker } from '../service/stateChecker';
-import { CollegeScorecardService } from '../service/collegeScorecard';
+import { Router, Request, Response, NextFunction } from 'express'
+import { StateChecker } from '../service/stateChecker'
+import { CollegeScorecardService } from '../service/collegeScorecard'
 
 class StateFinder {
-    router: Router;
+    router: Router
 
     constructor() {
         this.router = Router()
@@ -12,8 +12,8 @@ class StateFinder {
 
     public async findByState (req: Request, res: Response, next: NextFunction) : Promise<Response> {
         try {  
-            let stateChecker = new StateChecker();
-            let collegeScorecardService = new CollegeScorecardService();
+            let stateChecker = new StateChecker()
+            let collegeScorecardService = new CollegeScorecardService()
 
             let state: string = req.params.state
             let stateExists = await stateChecker.exists(state)
@@ -24,10 +24,10 @@ class StateFinder {
                     .json(`${state} is not a US State.`)
 
             let stateCode = await stateChecker.getStateCode(state)
-            let schoolNames = await collegeScorecardService.findSchoolsByState(stateCode)
+            let schoolNames = await collegeScorecardService.findSchoolNamesByState(stateCode)
 
             let result = schoolNames
-                .map((val) => new FindByStateResult(val));
+                .map((val) => new FindByStateResult(val))
 
             return res
                 .json(result)
