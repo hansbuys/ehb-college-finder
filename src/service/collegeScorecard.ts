@@ -1,13 +1,13 @@
 import axios from "axios";
 import { readFile } from "fs-extra";
-
-const debug = require("debug")("collegefinder");
+import logger from "../logging";
 
 export class CollegeScorecardService {
     private baseUrl = "https://api.data.gov/ed/collegescorecard/v1/schools.json";
 
     public getApiKey(): Promise<string> {
         const apiKeyFile = process.env.COLLEGESCORECARD_API_KEY_SECRET_FILE;
+        logger.debug(`Reading api key file at ${apiKeyFile}`);
         return readFile(apiKeyFile, "utf8");
     }
 
@@ -44,7 +44,7 @@ export class CollegeScorecardService {
                     const currentSchoolNames = results.map((school) =>
                         school["school.name"]);
 
-                    debug(`Succesfully fetched ${results.length} results from page ${currentPage} / ${numberOfPages}`);
+                    logger.debug(`Succesfully fetched ${results.length} results from page ${currentPage} / ${numberOfPages}`);
 
                     schoolNames = schoolNames.concat(currentSchoolNames);
                 });
@@ -52,7 +52,7 @@ export class CollegeScorecardService {
             page++;
         }
 
-        debug(`Succesfully fetched ${schoolNames.length} results for ${stateCode}`);
+        logger.info(`Succesfully fetched ${schoolNames.length} results for ${stateCode}`);
 
         return schoolNames;
     }

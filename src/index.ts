@@ -1,13 +1,12 @@
 import app from "./App";
-
-const debug = require("debug")("collegefinder");
+import logger from "./logging";
 
 const port = process.env.PORT || 3000;
 
 app.listen(port, (err) => {
     if (err) {
-        return debug(err);
+        return logger.error(err);
     }
 
-    return debug(`server is listening on ${port}`);
+    return logger.info(`server is listening on ${port}`);
 });

@@ -1,8 +1,7 @@
 import { NextFunction, Request, Response, Router } from "express";
 import { CollegeScorecardService } from "../service/collegeScorecard";
 import { StateChecker } from "../service/stateChecker";
-
-const debug = require("debug")("collegefinder");
+import logger from "../logging";
 
 class StateFinder {
     public router: Router;
@@ -23,14 +22,14 @@ class StateFinder {
 
             if (!stateExists) {
                 const invalidStateMessage = `${state} is not a recognized US State identifier.`;
-                debug(invalidStateMessage);
+                logger.warn(invalidStateMessage);
                 return res
                     .status(500)
                     .json(invalidStateMessage);
             }
 
             const stateCode = await stateChecker.getStateCode(state);
-            debug(`Fetching college names from CollegeScorecard API for ${state}`);
+            logger.debug(`Fetching college names from CollegeScorecard API for ${state}`);
             const schoolNames = await collegeScorecardService.findSchoolNamesByState(stateCode);
 
             const result = schoolNames
@@ -40,7 +39,7 @@ class StateFinder {
                 .json(result);
 
         } catch (err) {
-            debug(`An error occured while fetching college names for ${state} : ${err}`);
+            logger.error(`An error occured while fetching college names for ${state} : ${err}`);
             return res
                 .status(500)
                 .json(err);
@@ -48,7 +47,7 @@ class StateFinder {
     }
 
     public init(): void {
-        debug("Mapping routes for StateFinder");
+        logger.debug("Mapping routes for StateFinder");
 
         this.router.get("/:state", this.findByState);
     }
