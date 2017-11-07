@@ -1,7 +1,7 @@
 export class CollegeScorecardService {
-    public async findSchoolsByState(stateCode: string): Promise<Array<string>> {
+    public async findSchoolNamesByState(stateCode: string): Promise<string[]> {
         return [
             `School in ${stateCode}`
-        ]
+        ];
     }
 }

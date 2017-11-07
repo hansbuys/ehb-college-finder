@@ -1,55 +1,65 @@
-import { Router, Request, Response, NextFunction } from 'express'
-import { StateChecker } from '../service/stateChecker'
-import { CollegeScorecardService } from '../service/collegeScorecard'
+import { NextFunction, Request, Response, Router } from "express";
+import { CollegeScorecardService } from "../service/collegeScorecard";
+import { StateChecker } from "../service/stateChecker";
+
+const debug = require("debug")("collegefinder");
 
 class StateFinder {
-    router: Router
+    public router: Router;
 
     constructor() {
-        this.router = Router()
-        this.init()
+        this.router = Router();
+        this.init();
     }
 
-    public async findByState (req: Request, res: Response, next: NextFunction) : Promise<Response> {
-        try {  
-            let stateChecker = new StateChecker()
-            let collegeScorecardService = new CollegeScorecardService()
+    public async findByState(req: Request, res: Response, next: NextFunction): Promise<Response> {
+        const state: string = req.params.state;
 
-            let state: string = req.params.state
-            let stateExists = await stateChecker.exists(state)
+        try {
+            const stateChecker = new StateChecker();
+            const collegeScorecardService = new CollegeScorecardService();
 
-            if (!stateExists) 
+            const stateExists = await stateChecker.exists(state);
+
+            if (!stateExists) {
+                const invalidStateMessage = `${state} is not a recognized US State identifier.`;
+                debug(invalidStateMessage);
                 return res
                     .status(500)
-                    .json(`${state} is not a US State.`)
+                    .json(invalidStateMessage);
+            }
 
-            let stateCode = await stateChecker.getStateCode(state)
-            let schoolNames = await collegeScorecardService.findSchoolNamesByState(stateCode)
+            const stateCode = await stateChecker.getStateCode(state);
+            debug(`Fetching college names from CollegeScorecard API for ${state}`);
+            const schoolNames = await collegeScorecardService.findSchoolNamesByState(stateCode);
 
-            let result = schoolNames
-                .map((val) => new FindByStateResult(val))
+            const result = schoolNames
+                .map((val) => new FindByStateResult(val));
 
             return res
-                .json(result)
+                .json(result);
 
         } catch (err) {
+            debug(`An error occured while fetching college names for ${state} : ${err}`);
             return res
                 .status(500)
-                .json(err)
+                .json(err);
         }
     }
 
-    public init() : void {
-        this.router.get('/:state', this.findByState)
+    public init(): void {
+        debug("Mapping routes for StateFinder");
+
+        this.router.get("/:state", this.findByState);
     }
 }
 
 class FindByStateResult {
-    public name: string
+    public name: string;
 
     constructor(name: string) {
-        this.name = name
+        this.name = name;
     }
 }
 
-export default new StateFinder().router
+export default new StateFinder().router;

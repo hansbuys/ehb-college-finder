@@ -1,20 +1,26 @@
-import * as express from 'express'
-import stateFinder from './route/stateFinder'
+import * as express from "express";
+
+const debug = require("debug")("collegefinder");
+debug("Bootstrapping CollegeFinder application");
+
+import stateFinder from "./route/stateFinder";
 
 class App {
-    public express: express.Application
+    public express: express.Application;
 
     constructor() {
-        this.express = express()
-        this.mountRoutes()
+        this.express = express();
+        this.mountRoutes();
     }
 
     private mountRoutes(): void {
-        const router = express.Router()
-        
-        this.express.use('/', router)
-        this.express.use('/find/by-state', stateFinder)
+        const router = express.Router();
+
+        debug("Mapping all routes");
+
+        this.express.use("/", router);
+        this.express.use("/find/by-state", stateFinder);
     }
 }
 
-export default new App().express
+export default new App().express;
