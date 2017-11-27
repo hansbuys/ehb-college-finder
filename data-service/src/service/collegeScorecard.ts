@@ -5,10 +5,11 @@ import logger from "../logging";
 export class CollegeScorecardService {
     private baseUrl = "https://api.data.gov/ed/collegescorecard/v1/schools.json";
 
-    public getApiKey(): Promise<string> {
+    public async getApiKey(): Promise<string> {
         const apiKeyFile = process.env.COLLEGESCORECARD_API_KEY_SECRET_FILE;
         logger.debug(`Reading api key file at ${apiKeyFile}`);
-        return readFile(apiKeyFile, "utf8");
+        const fileContent = await readFile(apiKeyFile, "utf8");
+        return fileContent.replace(/(\r\n|\n|\r)/gm, "");
     }
 
     public async findSchoolNamesByState(stateCode: string): Promise<string[]> {
