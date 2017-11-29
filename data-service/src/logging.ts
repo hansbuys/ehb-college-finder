@@ -2,7 +2,7 @@ import { createLogger, stdSerializers } from "bunyan";
 
 export class Logging {
     public defaultLogger = createLogger({
-        name: "CollegeFinderLogger",
+        name: "CollegeFinder.DataService.Logger",
         serializers: {
             err: stdSerializers.err,
             req: stdSerializers.req

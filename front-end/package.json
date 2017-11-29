@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm run build:live",
+    "start": "node server.js",
     "build:live": "nodemon --exec ./node_modules/.bin/ts-node -- ./src/index.ts",
     "build": "tsc -p ."
   },
@@ -13,9 +13,18 @@
   "author": "Hans Buys",
   "license": "ISC",
   "devDependencies": {
+    "@types/bunyan": "^1.8.3",
     "@types/node": "^8.0.53",
+    "@types/watson-developer-cloud": "^2.40.0",
     "nodemon": "^1.12.1",
     "ts-node": "^3.3.0",
     "typescript": "^2.6.2"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "bunyan": "^1.8.12",
+    "dotenv": "^4.0.0",
+    "express": "^4.16.2",
+    "watson-developer-cloud": "^2.42.0"
   }
 }

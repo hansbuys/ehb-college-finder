@@ -11,5 +11,5 @@ services:
     environment: 
       - NODE_ENV=development
     ports:
-      - 9229:9229
+      - 9230:9229
     command: node --inspect=0.0.0.0:9229 dist/index.js

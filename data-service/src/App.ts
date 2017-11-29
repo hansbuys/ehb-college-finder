@@ -1,7 +1,7 @@
 import logger from "./logging";
 import * as express from "express";
 
-logger.info("Bootstrapping CollegeFinder application");
+logger.info("Bootstrapping CollegeFinder DataService application");
 
 import stateFinder from "./route/stateFinder";
 
