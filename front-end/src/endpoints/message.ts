@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response, Router } from "express";
 import logger from "../logging";
 import * as bodyParser from "body-parser"; // parser for post requests
-import { ConversationV1 as Conversation } from "watson-developer-cloud"; // watson sdk
+import { ConversationV1 as Watson } from "watson-developer-cloud"; // watson sdk
 import { promisify } from "util";
+import { Conversation } from "./conversation";
 
 class MessageService {
     public router: Router;
@@ -52,15 +53,15 @@ class MessageService {
         this.router.post("/", MessageService.sendMessage);
     }
 
-    private static getWatson(): Conversation {
-        logger.debug(`Initializing IBM Watson client`);
+    private static getWatson(): Watson {
+        logger.debug("Initializing IBM Watson client");
 
-        const watson = new Conversation({
+        const watson = new Watson({
             // If unspecified here, the CONVERSATION_USERNAME and CONVERSATION_PASSWORD env properties will be checked
             // After that, the SDK will fall back to the bluemix-provided VCAP_SERVICES environment property
             username: process.env.CONVERSATION_USERNAME,
             password: process.env.CONVERSATION_PASSWORD,
-            version_date: Conversation.VERSION_DATE_2017_05_26
+            version_date: Watson.VERSION_DATE_2017_05_26
         });
 
         return watson;
@@ -69,6 +70,8 @@ class MessageService {
     private static updateMessage(input: any, response: any): any {
         logger.debug(`Watson responsed with ${JSON.stringify(response)}`);
 
+        new Conversation().store(response);
+
         if (response.intents && response.intents[0]) {
             const intent = response.intents[0];
 
@@ -76,7 +79,7 @@ class MessageService {
         }
 
         if (response.context && response.context.system && response.context.system.branch_exited) {
-            logger.debug(`IBM Watson has gathered all required information`);
+            logger.debug("IBM Watson has gathered all required information");
 
             if (response.context.state) {
                 const state = response.context.state;
@@ -106,7 +109,7 @@ class MessageService {
             } else if (intent.confidence >= 0.5) {
                 responseText = `I think your intent was ${intent.intent}`;
             } else {
-                responseText = `I did not understand your intent`;
+                responseText = "I did not understand your intent";
             }
         }
         response.output.text = responseText;

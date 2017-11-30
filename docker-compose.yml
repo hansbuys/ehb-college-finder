@@ -13,7 +13,18 @@ services:
     image: collegefinder/front-end
     environment:
       - NODE_ENV=production
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
     ports:
       - 80:3000
     depends_on: 
       - data-service
+      - redis
+  redis:
+    image: redis:4.0-alpine
+    volumes:
+    - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+    volumes:
+      - redis_data:/data
+volumes:  
+  redis_data:
