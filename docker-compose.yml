@@ -6,9 +6,6 @@ services:
     image: collegefinder/data-service
     environment:
       - NODE_ENV=production
-      - COLLEGESCORECARD_API_KEY_SECRET_FILE=/run/secrets/collegescorecard_api_key
-    secrets:
-      - collegescorecard_api_key
     ports:
       - 3000:3000
   front-end:
@@ -18,7 +15,5 @@ services:
       - NODE_ENV=production
     ports:
       - 80:3000
-    
-secrets:
-  collegescorecard_api_key:
-    external: true
+    depends_on: 
+      - data-service

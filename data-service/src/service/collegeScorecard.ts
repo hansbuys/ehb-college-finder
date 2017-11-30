@@ -1,19 +1,11 @@
 import axios from "axios";
-import { readFile } from "fs-extra";
 import logger from "../logging";
 
 export class CollegeScorecardService {
     private baseUrl = "https://api.data.gov/ed/collegescorecard/v1/schools.json";
 
-    public async getApiKey(): Promise<string> {
-        const apiKeyFile = process.env.COLLEGESCORECARD_API_KEY_SECRET_FILE;
-        logger.debug(`Reading api key file at ${apiKeyFile}`);
-        const fileContent = await readFile(apiKeyFile, "utf8");
-        return fileContent.replace(/(\r\n|\n|\r)/gm, "");
-    }
-
     public async findSchoolNamesByState(stateCode: string): Promise<string[]> {
-        const apiKey = await this.getApiKey();
+        const apiKey = this.getApiKey();
         let page = 0;
 
         let moreResultsAvailable = true;
@@ -56,5 +48,17 @@ export class CollegeScorecardService {
         logger.info(`Succesfully fetched ${schoolNames.length} results for ${stateCode}`);
 
         return schoolNames;
+    }
+
+    private getApiKey() {
+        const apiKey = process.env.COLLEGESCORECARD_API_KEY || "<collegescorecard-api-key>";
+        if (!apiKey || apiKey === "<collegescorecard-api-key>") {
+            logger.error("Environment variable COLLEGESCORECARD_API_KEY has not been set.");
+            throw new Error(
+                "Environment variable 'COLLEGESCORECARD_API_KEY' has not been set. " +
+                "Please verify the creation of a .env file or its content.");
+        }
+
+        return process.env.COLLEGESCORECARD_API_KEY;
     }
 }
