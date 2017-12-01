@@ -30,7 +30,7 @@ Tests are located in the test/ directory and typically end with .test.ts
 ## Front End application
 ### Installation, building and running
 All files for the CollegeFinder front end app are located in front-end.
-The installation process is similar to the Data Service.
+The installation process is similar to the Data Service, but the application is hosted on port 80.
 
 # Running in Docker
 
@@ -51,12 +51,15 @@ $ echo "<College Scorecard API Key>" | docker secret create collegescorecard_api
 Building the image
 $ docker-compose build
 
-Deploy as a service
-$ docker stack deploy --compose-file=docker-compose.yml <service_name>
-Debug mode
-$ docker stack deploy --compose-file=docker-compose.yml --compose-file=docker-compose.debug.yml <service_name>
+Start the services
+$ docker-compose up
+
+Start the services in debug mode
+$ docker-compose -f docker-compose.yml -f docker-compose.debug.yml up
 
 ## Run installation
 
-Example call
+Example service call
   http://localhost:3000/find/by-state/Michigan
+Open chat conversation
+  http://localhost/

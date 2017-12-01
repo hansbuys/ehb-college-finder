@@ -162,32 +162,40 @@ var ConversationPanel = (function() {
     var messageArray = [];
 
     textArray.forEach(function(currentText) {
-      if (currentText) {
-        var messageJson = {
-          // <div class='segments'>
-          'tagName': 'div',
-          'classNames': ['segments'],
-          'children': [{
-            // <div class='from-user/from-watson latest'>
-            'tagName': 'div',
-            'classNames': [(isUser ? 'from-user' : 'from-watson'), 'latest', ((messageArray.length === 0) ? 'top' : 'sub')],
-            'children': [{
-              // <div class='message-inner'>
-              'tagName': 'div',
-              'classNames': ['message-inner'],
-              'children': [{
-                // <p>{messageText}</p>
-                'tagName': 'p',
-                'text': currentText
-              }]
-            }]
-          }]
-        };
-        messageArray.push(Common.buildDomElement(messageJson));
-      }
+      addToChat(messageArray, isUser, currentText);
     });
 
+    if (!isUser && newPayload.output.newText) {
+      addToChat(messageArray, false, newPayload.output.newText);
+    }
+
     return messageArray;
+  }
+
+  function addToChat(messageArray, isUser, text) {
+    if (text) {
+      var messageJson = {
+        // <div class='segments'>
+        'tagName': 'div',
+        'classNames': ['segments'],
+        'children': [{
+          // <div class='from-user/from-watson latest'>
+          'tagName': 'div',
+          'classNames': [(isUser ? 'from-user' : 'from-watson'), 'latest', ((messageArray.length === 0) ? 'top' : 'sub')],
+          'children': [{
+            // <div class='message-inner'>
+            'tagName': 'div',
+            'classNames': ['message-inner'],
+            'children': [{
+              // <p>{messageText}</p>
+              'tagName': 'p',
+              'text': text
+            }]
+          }]
+        }]
+      };
+      messageArray.push(Common.buildDomElement(messageJson));
+    }
   }
 
   // Scroll to the bottom of the chat window (to the most recent messages)

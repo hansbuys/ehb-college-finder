@@ -6,6 +6,7 @@ services:
     image: collegefinder/data-service
     environment:
       - NODE_ENV=production
+      - LOG_LEVEL=warning
     ports:
       - 3000:3000
   front-end:
@@ -13,6 +14,7 @@ services:
     image: collegefinder/front-end
     environment:
       - NODE_ENV=production
+      - LOG_LEVEL=warning
       - REDIS_HOST=redis
       - REDIS_PORT=6379
     ports:
