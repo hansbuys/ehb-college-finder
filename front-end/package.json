@@ -21,7 +21,6 @@
     "@types/node": "^8.0.53",
     "@types/redis": "^2.8.1",
     "@types/watson-developer-cloud": "^2.40.0",
-    "nodemon": "^1.12.1",
     "ts-node": "^3.3.0",
     "typescript": "^2.6.2"
   },
