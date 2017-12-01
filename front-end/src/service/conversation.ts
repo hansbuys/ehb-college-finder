@@ -3,6 +3,7 @@ import { Parser, WatsonParser } from "./parser";
 import { ConversationRepository } from "./conversationRepository";
 import { IntentHandlers } from "./intentHandler";
 import { Agent, WatsonAgent } from "./agent";
+import { DictionaryOfStrings } from "./customTypes";
 
 export class Conversation {
 
@@ -74,7 +75,7 @@ export class Conversation {
         const parametersAsString = await this.repository.retrieve(`${conversationId}.parameters`);
 
         if (parametersAsString && parametersAsString !== "{}") {
-            const parameters = JSON.parse(parametersAsString) as { [index: string]: {value: string} };
+            const parameters = JSON.parse(parametersAsString) as DictionaryOfStrings;
 
             if (!parameters) {
                 throw new Error(`Unable to parse parameters from JSON: ${parametersAsString}`);

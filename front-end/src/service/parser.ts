@@ -1,10 +1,11 @@
 import logger from "../logging";
+import { DictionaryOfStrings } from "./customTypes";
 
 export interface Parser {
     getIntent(): string | false;
     getIntentConfidence(): string | false;
     getConversationId(): string | false;
-    getParameters(): { [index: string]: {value: string} } | false;
+    getParameters(): DictionaryOfStrings | false;
     getResponse(): any;
     isConversationComplete(): boolean;
     appendToOutput(text: string): void;
@@ -43,10 +44,10 @@ export class WatsonParser implements Parser {
         return this.response.context.conversation_id;
     }
 
-    public getParameters(): { [index: string]: {value: string} } | false {
+    public getParameters(): DictionaryOfStrings | false {
         const parameterNames = Object.getOwnPropertyNames(this.response.context)
             .filter((name) => !this.ignoredParameterNames.some((ignored) => name === ignored));
-        const parameters: { [index: string]: {value: string} } = {};
+        const parameters: DictionaryOfStrings = {};
 
         if (parameterNames.length > 0) {
             parameterNames.map((name) => {

@@ -43,6 +43,7 @@
       "check-format",
       "allow-leading-underscore"
     ],
-    "no-string-literal": false
+    "no-string-literal": false,
+    "interface-over-type-literal": false
   }
 }

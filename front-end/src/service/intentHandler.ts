@@ -1,4 +1,5 @@
 import logger from "../logging";
+import { DictionaryOfStrings } from "./customTypes";
 
 export class IntentHandlers {
     private intentHandlers: Map<string, IntentHandlerBase>;
@@ -10,7 +11,7 @@ export class IntentHandlers {
         logger.debug("Attached all handlers");
     }
 
-    public handleWithParameters(intent: string, parameters: { [index: string]: {value: string} }): Promise<string | false> | false {
+    public handleWithParameters(intent: string, parameters: DictionaryOfStrings): Promise<string | false> | false {
         const handler = this.getHandler(intent);
 
         return handler ? handler.createReply(parameters) : false;
@@ -42,14 +43,14 @@ abstract class IntentHandlerBase {
     public abstract readonly intent: string;
     public abstract readonly parameterNames: string[];
 
-    public abstract createReply(params?: { [index: string]: {value: string} }): Promise<string | false>;
+    public abstract createReply(params?: DictionaryOfStrings): Promise<string | false>;
 }
 
 class FindByStateHandler extends IntentHandlerBase {
     public parameterNames: string[] = ["state"];
     public readonly intent = "find-by-state";
 
-    public async createReply(params?: { [index: string]: {value: string} }): Promise<string | false> {
+    public async createReply(params?: DictionaryOfStrings): Promise<string | false> {
         if (params && params["state"]) {
             const state = params["state"];
 
