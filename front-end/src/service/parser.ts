@@ -51,7 +51,9 @@ export class WatsonParser implements Parser {
 
         if (parameterNames.length > 0) {
             parameterNames.map((name) => {
-                parameters[name] = this.response.context[name];
+                parameters[name] = {
+                    value: this.response.context[name]
+                };
             });
 
             return parameters;
@@ -65,7 +67,10 @@ export class WatsonParser implements Parser {
     }
 
     public appendToOutput(text: string) {
-        this.response.output.text.push(text);
+        const textPerLine = text.split("\n");
+        textPerLine.forEach((line) => {
+            this.response.output.text.push(line);
+        });
     }
 
     public getResponse(): any {
