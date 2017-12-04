@@ -3,12 +3,12 @@ import { promisify } from "util";
 import { ConversationV1 as WatsonClient } from "watson-developer-cloud";
 
 export interface Agent {
-    sendMessage(context: any, input: any): Promise<string>;
+    sendMessage(body: any): Promise<{}>;
 }
 
 export class WatsonAgent implements Agent {
 
-    public sendMessage(context: any, input: any): Promise<any> {
+    public sendMessage(body: { context: {}, input: {}}): Promise<{}> {
         const workspace = process.env.WORKSPACE_ID || "<workspace-id>";
         if (!workspace || workspace === "<workspace-id>") {
             logger.error("Environment variable WORKSPACE_ID has not been set.");
@@ -27,8 +27,8 @@ export class WatsonAgent implements Agent {
 
         const payload = {
             workspace_id: workspace,
-            context: context || {},
-            input: input || {}
+            context: body.context || {},
+            input: body.input || {}
         };
 
         const watson = this.getWatson();

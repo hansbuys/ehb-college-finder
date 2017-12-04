@@ -11,10 +11,10 @@ class MessageService {
     }
 
     public static async sendMessage(req: Request, res: Response, next: NextFunction): Promise<Response> {
-        logger.debug("sendMessage has been called.");
+        logger.trace("sendMessage has been called.");
 
         return new Conversation()
-            .reply(req.body.context, req.body.input)
+            .reply(req.body)
             .then((body) => {
                 logger.debug("Conversation has succesfully been answered.");
                 return res.json(body);
@@ -25,7 +25,7 @@ class MessageService {
     }
 
     public init(): void {
-        logger.debug("Mapping routes for MessageService");
+        logger.trace("Mapping routes for MessageService");
 
         this.router.post("/", MessageService.sendMessage);
     }
