@@ -1,6 +1,6 @@
 import logger from "../logging";
 import { Parser, WatsonParser } from "./parser";
-import { ConversationRepository } from "./conversationRepository";
+import { ConversationRepository } from "./repository/conversation";
 import { Handlers } from "./intent/handlers";
 import { Agent, WatsonAgent } from "./agent";
 import { DictionaryOfStrings } from "./customTypes";

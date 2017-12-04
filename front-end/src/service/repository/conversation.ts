@@ -1,4 +1,4 @@
-import logger from "../logging";
+import logger from "../../logging";
 import * as redis from "redis";
 import { promisify } from "util";
 import * as bluebird from "bluebird";
