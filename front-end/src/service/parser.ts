@@ -3,7 +3,7 @@ import { DictionaryOfStrings } from "./customTypes";
 
 export interface Parser {
     getIntent(): string | false;
-    getIntentConfidence(): string | false;
+    getIntentConfidence(): number | false;
     getConversationId(): string | false;
     getParameters(): DictionaryOfStrings | false;
     getResponse(): any;
@@ -33,7 +33,7 @@ export class WatsonParser implements Parser {
         return false;
     }
 
-    public getIntentConfidence(): string | false {
+    public getIntentConfidence(): number | false {
         if (this.response.intents && this.response.intents[0]) {
             return this.response.intents[0].confidence;
         }
