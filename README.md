@@ -1,36 +1,29 @@
 # Running locally
-## Data Service
-### Installation
+## Installation
 All files for the CollegeFinder Data Service are located in data-service.
+All files for the CollegeFinder Front End are located in front-end.
 
-$ npm install
+./data-service $ npm install
+./front-end $ npm install
 
-Running this command created a node_modules/ directory with all dependent modules available.
-After doing this you can build the source code or run the tests.
+Running this command creates a node_modules/ directory with all dependent modules available.
+After doing this you can build the source code and run the application.
 
-### Build files
+## Build files
 
-$ npm run build
+./data-service $ npm run build
+./front-end $ npm run build
 
 Source code resides in the src/ directory and is written in TypeScript and files end with .ts.
 After building a dist/ directory is created with javascript files which can be used to run the installation.
 
-### Run installation
+## Run installation
 
-$ npm start
+./data-service $ npm start
+./front-end $ npm start
 
-You can now open a browser and point it to http://localhost:3000/
-
-### Run unit tests
-
-$ npm test
-
-Tests are located in the test/ directory and typically end with .test.ts
-
-## Front End application
-### Installation, building and running
-All files for the CollegeFinder front end app are located in front-end.
-The installation process is similar to the Data Service, but the application is hosted on port 80.
+You can now open a browser and point it to http://localhost/
+By default the backend data service is available via port 3000.
 
 # Running in Docker
 
@@ -41,12 +34,6 @@ Minimum:
  - Docker v17.09.0 Community Edition
 
 ## Installation
-
-Set Docker to swarm mode to enable secrets
-$ docker swarm init
-
-Create the required secrets
-$ echo "<College Scorecard API Key>" | docker secret create collegescorecard_api_key -
 
 Building the image
 $ docker-compose build
@@ -59,7 +46,7 @@ $ docker-compose -f docker-compose.yml -f docker-compose.debug.yml up
 
 ## Run installation
 
-Example service call
+Example data service call
   http://localhost:3000/find/by-state/Michigan
 Open chat conversation
   http://localhost/
