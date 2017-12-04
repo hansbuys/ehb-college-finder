@@ -17,6 +17,8 @@ services:
       - LOG_LEVEL=warning
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+      - DATASERVICE_HOST=data-service
+      - DATASERVICE_PORT=3000
     ports:
       - 80:3000
     depends_on: 

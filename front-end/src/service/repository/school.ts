@@ -1,16 +1,31 @@
+import axios from "axios";
+
 export interface School {
     name: string;
 }
 
 export class SchoolRepository {
+    private baseUrl: string;
+
+    constructor() {
+        this.baseUrl = `http://${process.env.DATASERVICE_HOST}:${process.env.DATASERVICE_PORT}`;
+    }
+
     public async getForState(state: string): Promise<School[]> {
-        return [
-            { name: "Test 5" },
-            { name: "Test 3" },
-            { name: "Test 2" },
-            { name: "Test 1" },
-            { name: "Test 4" },
-            { name: "Test 6" },
-        ];
+        let result: any;
+
+        try {
+            result = await this.getSchoolsFromDataService(state);
+        } catch (err) {
+            throw new Error(`The data service returned an error: ${err}`);
+        }
+
+        return result.data.map((r: { name: string }) => {
+            return { name: r.name };
+        });
+    }
+
+    private getSchoolsFromDataService(state: string): Promise<any> {
+        return axios.get(`${this.baseUrl}/find/by-state/${state}`);
     }
 }
