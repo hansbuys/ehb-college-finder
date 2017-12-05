@@ -16,7 +16,6 @@ class App {
     }
 
     private middleware(): void {
-        // load UI from public folder
         this.express.use(express.static("./public"));
         this.express.use(bodyParser.json());
 

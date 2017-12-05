@@ -4,7 +4,7 @@ export class Logging {
 
     public defaultLogger = (level: LogLevel) => {
         const logger = createLogger({
-            name: "CollegeFinder.Frontend.Logger",
+            name: "CollegeFinder.DataService.Logger",
             serializers: {
                 err: stdSerializers.err,
                 req: stdSerializers.req
