@@ -50,3 +50,6 @@ Example data service call
   http://localhost:3000/find/by-state/Michigan
 Open chat conversation
   http://localhost/
+
+# Code origins
+./front-end/public & ./front-end/readme_images are created by IBM.
