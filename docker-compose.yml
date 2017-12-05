@@ -33,6 +33,43 @@ services:
     volumes:
       - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
       - redis_data:/data
+  elasticsearch:
+    build: ./logging/elasticsearch
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+    networks:
+      - elk
+    volumes:
+      - elastic_data:/usr/share/elasticsearch/data
+  logstash:
+    build: ./logging/logstash
+    volumes:
+      - logs:/var/log/collegefinder/
+    ports:
+      - "5000:5000"
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    networks:
+      - elk
+    depends_on:
+      - elasticsearch
+  kibana:
+    build: ./logging/kibana
+    ports:
+      - "5601:5601"
+    networks:
+      - elk
+    depends_on:
+      - elasticsearch
+
 volumes:  
   redis_data:
   logs:
+  elastic_data:
+
+networks: 
+  elk:
+    driver: bridge
