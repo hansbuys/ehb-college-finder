@@ -162,40 +162,32 @@ var ConversationPanel = (function() {
     var messageArray = [];
 
     textArray.forEach(function(currentText) {
-      addToChat(messageArray, isUser, currentText);
-    });
-
-    if (!isUser && newPayload.output.newText) {
-      addToChat(messageArray, false, newPayload.output.newText);
-    }
-
-    return messageArray;
-  }
-
-  function addToChat(messageArray, isUser, text) {
-    if (text) {
-      var messageJson = {
-        // <div class='segments'>
-        'tagName': 'div',
-        'classNames': ['segments'],
-        'children': [{
-          // <div class='from-user/from-watson latest'>
+      if (currentText) {
+        var messageJson = {
+          // <div class='segments'>
           'tagName': 'div',
-          'classNames': [(isUser ? 'from-user' : 'from-watson'), 'latest', ((messageArray.length === 0) ? 'top' : 'sub')],
+          'classNames': ['segments'],
           'children': [{
-            // <div class='message-inner'>
+            // <div class='from-user/from-watson latest'>
             'tagName': 'div',
-            'classNames': ['message-inner'],
+            'classNames': [(isUser ? 'from-user' : 'from-watson'), 'latest', ((messageArray.length === 0) ? 'top' : 'sub')],
             'children': [{
-              // <p>{messageText}</p>
-              'tagName': 'p',
-              'text': text
+              // <div class='message-inner'>
+              'tagName': 'div',
+              'classNames': ['message-inner'],
+              'children': [{
+                // <p>{messageText}</p>
+                'tagName': 'p',
+                'text': currentText
+              }]
             }]
           }]
-        }]
-      };
-      messageArray.push(Common.buildDomElement(messageJson));
-    }
+        };
+        messageArray.push(Common.buildDomElement(messageJson));
+      }
+    });
+
+    return messageArray;
   }
 
   // Scroll to the bottom of the chat window (to the most recent messages)
