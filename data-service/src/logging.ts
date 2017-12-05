@@ -13,6 +13,13 @@ export class Logging {
                 {
                     level,
                     stream: process.stdout
+                },
+                {
+                    type: "rotating-file",
+                    level,
+                    path: "/var/log/collegefinder/data-service.json",
+                    period: "1d",
+                    count: 5
                 }
             ]
         });

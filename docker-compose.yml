@@ -6,15 +6,17 @@ services:
     image: collegefinder/data-service
     environment:
       - NODE_ENV=production
-      - LOG_LEVEL=warning
+      - LOG_LEVEL=warn
     ports:
       - 3000:3000
+    volumes:
+      - logs:/var/log/collegefinder/
   front-end:
     build: ./front-end
     image: collegefinder/front-end
     environment:
       - NODE_ENV=production
-      - LOG_LEVEL=warning
+      - LOG_LEVEL=warn
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - DATASERVICE_HOST=data-service
@@ -24,11 +26,13 @@ services:
     depends_on: 
       - data-service
       - redis
+    volumes:
+      - logs:/var/log/collegefinder/
   redis:
     image: redis:4.0-alpine
     volumes:
-    - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
-    volumes:
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
       - redis_data:/data
 volumes:  
   redis_data:
+  logs:
