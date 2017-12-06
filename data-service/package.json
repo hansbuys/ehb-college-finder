@@ -13,6 +13,12 @@
   "license": "ISC",
   "description": "EhB Final Work CollegeFinder app",
   "dependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/bunyan": "^1.8.3",
+    "@types/dotenv": "^4.0.2",
+    "@types/express": "^4.0.39",
+    "@types/fs-extra": "^4.0.3",
+    "@types/node": "^8.0.48",
     "axios": "^0.17.0",
     "bunyan": "^1.8.12",
     "dotenv": "^4.0.0",
@@ -21,12 +27,6 @@
     "typescript": "^2.6.2"
   },
   "devDependencies": {
-    "@types/axios": "^0.14.0",
-    "@types/bunyan": "^1.8.3",
-    "@types/dotenv": "^4.0.2",
-    "@types/express": "^4.0.39",
-    "@types/fs-extra": "^4.0.3",
-    "@types/node": "^8.0.48",
     "tslint": "^5.8.0"
   }
 }
