@@ -1,4 +1,4 @@
-import logger from "../../logging";
+import * as Logger from "bunyan";
 import { DictionaryOfStrings } from "../customTypes";
 import { FindByStateHandler } from "./findByState";
 import { HandlerBase } from "./handlerBase";
@@ -6,11 +6,14 @@ import { HandlerBase } from "./handlerBase";
 export class Handlers {
     private intentHandlers: Map<string, HandlerBase>;
 
-    constructor() {
+    private log: Logger;
+
+    constructor(log: Logger) {
+        this.log = log;
         this.intentHandlers = new Map<string, HandlerBase>();
-        logger.debug("Attaching handlers");
+        this.log.trace("Attaching handlers");
         this.addHandler(FindByStateHandler);
-        logger.debug("Attached all handlers");
+        this.log.trace("Attached all handlers");
     }
 
     public handleWithParameters(intent: string, parameters: DictionaryOfStrings): Promise<string | false> | false {
@@ -33,10 +36,10 @@ export class Handlers {
         return false;
     }
 
-    private addHandler<T>(ctor: { new (): HandlerBase; }) {
-        logger.trace(`Attaching handler: ${ctor.name}.`);
-        const handler = new ctor();
-        logger.debug(`Attaching handler ${ctor.name} for intent ${handler.intent}.`);
+    private addHandler<T>(ctor: { new (log: Logger): HandlerBase; }) {
+        this.log.trace(`Attaching handler: ${ctor.name}.`);
+        const handler = new ctor(this.log);
+        this.log.trace(`Attaching handler ${ctor.name} for intent ${handler.intent}.`);
         this.intentHandlers.set(handler.intent, handler);
     }
 }

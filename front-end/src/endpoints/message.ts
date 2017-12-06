@@ -10,16 +10,17 @@ class MessageService {
         this.init();
     }
 
-    public static async sendMessage(req: Request, res: Response, next: NextFunction): Promise<Response> {
-        logger.trace("sendMessage has been called.");
+    public static async sendMessage(req: any, res: Response, next: NextFunction): Promise<Response> {
+        const log = req.log;
+        log.trace("sendMessage has been called.");
 
-        return new Conversation()
+        return new Conversation(log)
             .reply(req.body)
             .then((body) => {
-                logger.debug("Conversation has succesfully been answered.");
+                log.debug("Conversation has succesfully been answered.");
                 return res.json(body);
             }).catch((err) => {
-                logger.error(`Conversation has errored: ${err}`);
+                log.error({ err }, `Conversation has errored.`);
                 return res.status(err.code || 500).json(err);
             });
     }

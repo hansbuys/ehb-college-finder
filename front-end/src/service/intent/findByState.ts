@@ -1,17 +1,20 @@
 import { HandlerBase } from "./handlerBase";
 import { DictionaryOfStrings } from "../customTypes";
 import { SchoolRepository } from "../repository/school";
+import * as Logger from "bunyan";
 
 export class FindByStateHandler extends HandlerBase {
     private schoolRepo: SchoolRepository;
     private maxNumberOfSchoolsToReturn: number;
+    private log: Logger;
 
     public readonly intent = "find-by-state";
     public parameterNames: string[] = ["state"];
 
-    constructor(maxNumberOfSchoolsToReturn: number = 5) {
+    constructor(log: Logger, maxNumberOfSchoolsToReturn: number = 5) {
         super();
-        this.schoolRepo = new SchoolRepository();
+        this.log = log;
+        this.schoolRepo = new SchoolRepository(this.log);
         this.maxNumberOfSchoolsToReturn = maxNumberOfSchoolsToReturn;
     }
 
@@ -26,10 +29,13 @@ export class FindByStateHandler extends HandlerBase {
             throw new Error("No state defined.");
         }
 
+        this.log.trace(`Fetching schools for state ${state}`);
         const schoolsInState = await this.schoolRepo.getForState(state);
         const numberOfSchoolsInState = schoolsInState.length;
+        this.log.info(`Found ${numberOfSchoolsInState} schools in state ${state}`);
 
         if (numberOfSchoolsInState === 0) {
+            this.log.warn(`Found no schools in state ${state}`);
             return `No schools found in state ${state}.`;
         }
 

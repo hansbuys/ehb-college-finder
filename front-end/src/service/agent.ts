@@ -1,4 +1,4 @@
-import logger from "../logging";
+import * as Logger from "bunyan";
 import { promisify } from "util";
 import { ConversationV1 as WatsonClient } from "watson-developer-cloud";
 
@@ -8,10 +8,16 @@ export interface Agent {
 
 export class WatsonAgent implements Agent {
 
+    private log: Logger;
+
+    constructor(log: Logger) {
+        this.log = log;
+    }
+
     public sendMessage(body: { context: {}, input: {}}): Promise<{}> {
         const workspace = process.env.WORKSPACE_ID || "<workspace-id>";
         if (!workspace || workspace === "<workspace-id>") {
-            logger.error("Environment variable WORKSPACE_ID has not been set.");
+            this.log.error("Environment variable WORKSPACE_ID has not been set.");
             return new Promise<any>(() => {
                 return {
                     output: {
@@ -34,18 +40,18 @@ export class WatsonAgent implements Agent {
         const watson = this.getWatson();
         const sendMessageAsync = promisify(watson.message);
 
-        logger.trace("Sending message to IBM Watson");
+        this.log.trace("Sending message to IBM Watson");
         return sendMessageAsync.call(watson, payload).then((data: any) => {
-            logger.debug("IBM Watson call succesfull.");
+            this.log.debug("IBM Watson call succesfull.");
             return data;
         }).catch((err: any) => {
-            logger.error(`IBM Watson returned an error: ${err}.`);
+            this.log.error(`IBM Watson returned an error: ${err}.`);
             return err;
         });
     }
 
     private getWatson(): WatsonClient {
-        logger.trace("Initializing IBM Watson client");
+        this.log.trace("Initializing IBM Watson client");
 
         const watson = new WatsonClient({
             username: process.env.CONVERSATION_USERNAME,

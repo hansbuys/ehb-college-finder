@@ -1,6 +1,9 @@
 import logger from "./logging";
+import * as Logger from "bunyan";
 import * as express from "express";
 import * as bodyParser from "body-parser";
+import * as util from "util";
+import { v1 as uuid } from "uuid";
 
 logger.info("Bootstrapping CollegeFinder Frontend application");
 
@@ -19,24 +22,27 @@ class App {
         this.express.use(express.static("./public"));
         this.express.use(bodyParser.json());
 
-        this.express.use((req, res, next) => {
+        this.express.use((req: any, res, next) => {
+            const requestId = uuid();
+            res.header("X-Request-Id", requestId);
+            const log = req.log = logger.child({ requestId });
+
             const start = process.hrtime();
             const reqUrl = req.url;
-            logger.debug(`Starting request ${reqUrl}.`);
-
+            log.debug(`Starting request ${reqUrl}.`);
             res.on("finish", () => {
                 const elapsed = process.hrtime(start);
                 const elapsedInMs = (elapsed[0] * 1000) + (elapsed[1] / 1000000);
                 const message = `Handled ${reqUrl} in ${elapsedInMs.toFixed(3)}ms.`;
                 if (elapsedInMs < 3000) {
-                    logger.info(message);
+                    log.info(message);
                 } else {
-                    logger.warn(message);
+                    log.warn(message);
                 }
             });
 
             res.on("error", (err) => {
-                logger.error(`Request ${reqUrl} errored: ${err.message}`);
+                log.error(`Request ${reqUrl} errored: ${err.message}`);
             });
 
             next();

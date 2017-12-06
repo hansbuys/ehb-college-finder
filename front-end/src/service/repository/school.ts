@@ -1,4 +1,5 @@
 import axios from "axios";
+import * as Logger from "bunyan";
 
 export interface School {
     name: string;
@@ -6,8 +7,10 @@ export interface School {
 
 export class SchoolRepository {
     private baseUrl: string;
+    private log: Logger;
 
-    constructor() {
+    constructor(log: Logger) {
+        this.log = log;
         this.baseUrl = `http://${process.env.DATASERVICE_HOST}:${process.env.DATASERVICE_PORT}`;
     }
 
@@ -26,6 +29,8 @@ export class SchoolRepository {
     }
 
     private getSchoolsFromDataService(state: string): Promise<any> {
-        return axios.get(`${this.baseUrl}/find/by-state/${state}`);
+        const url = `${this.baseUrl}/find/by-state/${state}`;
+        this.log.debug(`Calling: ${url}`);
+        return axios.get(url);
     }
 }
