@@ -6,7 +6,7 @@ services:
     image: collegefinder/data-service
     environment:
       - NODE_ENV=production
-      - LOG_LEVEL=warn
+      - LOG_LEVEL=info
     ports:
       - 3000:3000
     volumes:
@@ -16,7 +16,7 @@ services:
     image: collegefinder/front-end
     environment:
       - NODE_ENV=production
-      - LOG_LEVEL=warn
+      - LOG_LEVEL=info
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - DATASERVICE_HOST=data-service
@@ -52,6 +52,7 @@ services:
       - "5000:5000"
     environment:
       LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+      LOG_LEVEL: warn
     networks:
       - elk
     depends_on:
@@ -64,6 +65,8 @@ services:
       - elk
     depends_on:
       - elasticsearch
+    environment: 
+      LOGGING_QUIET: "true"
 
 volumes:  
   redis_data:
