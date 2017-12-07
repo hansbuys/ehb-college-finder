@@ -4,16 +4,14 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prestart": "npm run build",
     "start": "node dist/index.js",
-    "debugmode": "npm run build && node --inspect=0.0.0.0:9229 dist/index.js",
+    "debugmode": "node --inspect=0.0.0.0:9229 dist/index.js",
     "build": "tsc -p ."
   },
   "author": "Hans Buys",
   "license": "ISC",
   "description": "EhB Final Work CollegeFinder app",
   "dependencies": {
-    "@types/axios": "^0.14.0",
     "@types/bunyan": "^1.8.3",
     "@types/dotenv": "^4.0.2",
     "@types/express": "^4.0.39",
