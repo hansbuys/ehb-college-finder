@@ -1,36 +1,8 @@
-# Running locally
-## Installation
-All files for the CollegeFinder Data Service are located in data-service.
-All files for the CollegeFinder Front End are located in front-end.
-
-./data-service $ npm install
-./front-end $ npm install
-
-Running this command creates a node_modules/ directory with all dependent modules available.
-After doing this you can build the source code and run the application.
-
-## Build files
-
-./data-service $ npm run build
-./front-end $ npm run build
-
-Source code resides in the src/ directory and is written in TypeScript and files end with .ts.
-After building a dist/ directory is created with javascript files which can be used to run the installation.
-
-## Run installation
-
-./data-service $ npm start
-./front-end $ npm start
-
-You can now open a browser and point it to http://localhost/
-By default the backend data service is available via port 3000.
-
 # Running in Docker
-
 ## Requirements
 
 Minimum: 
- - Windows 10 Professional (Hyper-V Enabled)
+ - Windows 10 Professional (Hyper-V Enabled) or other Docker enabled OS.
  - Docker v17.09.0 Community Edition
 
 ## Installation
@@ -51,5 +23,16 @@ Example data service call
 Open chat conversation
   http://localhost/
 
+## Debugging
+### Data Service
+Attach a debugger for NodeJS to port 9229. 
+You can use for example Chrome NodeJS tools (at chrome://inspect).
+
+### Front End
+Identical to debugging for the Data Service but instead connect to port 9230.
+
 # Code origins
 ./front-end/public & ./front-end/readme_images are created by IBM.
+./front-end/src/ was initially started by the same IBM application, 
+it has since been modified to support this project. 
+IBM Chat application source: https://github.com/watson-developer-cloud/conversation-simple

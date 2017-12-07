@@ -12,8 +12,8 @@ export class WatsonAgent implements Agent {
     }
 
     public sendMessage(body: { context: {}, input: {} }): Promise<{}> {
-        // deze code is +/- overgenomen van https://github.com/watson-developer-cloud/conversation-simple
-        // de code is intussen al aangepast, maar het principe komt van daar.
+        // this code originates from https://github.com/watson-developer-cloud/conversation-simple
+        // the code has since been modified, but the principles are the same.
         const workspace = process.env.WORKSPACE_ID || "<workspace-id>";
         if (!workspace || workspace === "<workspace-id>") {
             this.log.error("Environment variable WORKSPACE_ID has not been set.");
