@@ -7,6 +7,8 @@ declare module "redis" {
     export interface RedisClient {
         getAsync(...args: any[]): Promise<string>;
         setAsync(...args: any[]): Promise<boolean>;
+        lpopAsync(key: string): Promise<boolean>;
+        existsAsync(keys: string | string[]): Promise<boolean>;
     }
 }
 
@@ -29,6 +31,12 @@ export class ConversationRepository {
         this.log.trace(`Storing key '${key}'`);
         if (await this.client.setAsync(key, value)) {
             this.log.debug(`Stored key '${key}'`);
+        }
+    }
+
+    public async unset(key: string): Promise<void> {
+        if (await this.client.exists(key) && await this.client.lpopAsync(key)) {
+            this.log.debug(`Removed key '${key}'`);
         }
     }
 

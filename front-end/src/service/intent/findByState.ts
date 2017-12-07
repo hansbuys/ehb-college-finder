@@ -20,6 +20,7 @@ export class FindByStateHandler extends HandlerBase {
 
     public async createReply(params?: DictionaryOfStrings): Promise<string | false> {
         if (!params || !params["state"]) {
+            this.log.info("Awaiting parameter 'state'");
             return false;
         }
 
