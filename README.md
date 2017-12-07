@@ -18,7 +18,7 @@ The workspace id, username and password created there should be placed in a (new
 #### Dialog
 'Welcome' is the default opening statement used to initiate the conversation.  
 'Help' uses the '#help' intent to allow asking for help.  
-'Find colleges' uses the '#find-by-state' intent to find schools.  
+'Find colleges' uses the '#find-by-state' intent and '@us-states' entity to detect when the user wants to find schools.  
 'Anything else' is the default when Watson does not recognize the request.
 
 ## College Scorecard
