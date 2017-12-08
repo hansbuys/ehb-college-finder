@@ -10,6 +10,15 @@ var Common = (function() {
     listForEach: listForEach
   };
 
+  // <start> modified existing code to no longer allow code injection.
+  // code snippet from: https://stackoverflow.com/a/20855640/3118621
+  function textFromHtmlString( arbitraryHtmlString ) {
+    const temp = document.createElement('div');
+    temp.innerHTML = arbitraryHtmlString;
+    return temp.innerText;
+  }
+  // <end> modified existing code to no longer allow code injection.
+
   // Take in JSON object and build a DOM element out of it
   // (Limited in scope, cannot necessarily create arbitrary DOM elements)
   // JSON Example:
@@ -29,7 +38,10 @@ var Common = (function() {
 
     // Fill the "content" of the element
     if (domJson.text) {
-      element.innerHTML = domJson.text;
+      // <start> modified existing code to no longer allow code injection.
+      element.innerHTML = textFromHtmlString(domJson.text);
+      // <original> element.innerHTML = domJson.text;
+      // <end> modified existing code to no longer allow code injection.
     } else if (domJson.html) {
       element.insertAdjacentHTML('beforeend', domJson.html);
     }
