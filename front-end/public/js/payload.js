@@ -26,7 +26,27 @@ var PayloadPanel = (function() {
   // Initialize the module
   function init() {
     payloadUpdateSetup();
+    // Hans Buys: toevoegen functionaliteit om test paneel te verstoppen in productie.
+    setupConversationPanel();
   }
+
+  // Hans Buys: toevoegen functionaliteit om test paneel te verstoppen in productie.
+  function setupConversationPanel() {
+    var http = new XMLHttpRequest();
+    http.open('GET', '/get-env', true);
+    http.onreadystatechange = function() {
+      if (http.readyState === 4 && http.status === 200 && http.responseText) {
+        if (http.responseText.includes("production")) {
+          var payloadColumn = document.querySelector(settings.selectors.payloadColumn);
+          payloadColumn.classList.add('hide');
+          var toggleButton = document.querySelector("#view-change-button");
+          toggleButton.classList.add('hide');
+        }
+      }
+    };
+    http.send();
+  }
+  // Hans Buys: einde aanpassing
 
   // Toggle panel between being:
   // reduced width (default for large resolution apps)

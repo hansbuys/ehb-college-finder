@@ -15,6 +15,17 @@ div {
   line-height: 1.25rem;
 }
 
+/* Hans Buys: code verplaatst en als belangrijk gemarkeerd*/
+.hide {
+  display: none !important;
+}
+
+/* Hans Buys: opmaak voor titels */
+h1, h2 {
+  text-align: center;
+}
+/* Hans Buys: einde opmaak voor titels */
+
 #view-change-button {
   display: inline-block;
   position: absolute;
@@ -72,15 +83,19 @@ div {
   padding: 0.9375rem 0 0.625rem 0;
   margin: auto;
   text-align: left;
-  max-width: 25rem;
+  /* Hans Buys: kleine wijziging */
+  max-width: 35rem;
   min-width: 9.375rem;
+  /* Hans Buys: kleine wijziging */
+  background: #fdfdfd;
 }
 
 #scrollingChat {
   margin: 0.75rem;
   overflow-y: auto;
   overflow-x: hidden;
-  height: calc(100% - 4rem);
+  /* Hans Buys: kleine wijziging */
+  height: calc(100% - 7rem);
 }
 
 .message-inner {
@@ -204,6 +219,21 @@ div {
 
 }
 
+/* Hans Buys: kleine wijziging qua kleur */
+#textInput::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  color: rgb(71, 71, 71);
+}
+#textInput::-moz-placeholder { /* Firefox 19+ */
+  color: rgb(71, 71, 71);
+}
+#textInput:-ms-input-placeholder { /* IE 10+ */
+  color: rgb(71, 71, 71);
+}
+#textInput:-moz-placeholder { /* Firefox 18- */
+  color: rgb(71, 71, 71);
+}
+/* Hans Buys: einde kleine wijziging */
+
 #textInput.underline {
   border-bottom: 2px solid #00B4A0;
 }
@@ -218,7 +248,8 @@ div {
 }
 
 input:-moz-placeholder {
-  color: #B5B5B5;
+  /* Hans Buys: kleine wijziging */
+  color: rgb(0, 0, 0);
   opacity:  1;
 }
 
@@ -265,18 +296,15 @@ input:-moz-placeholder {
   min-width: initial;
 }
 
+/* Hans Buys: Aanpassing bestaande code, kleur wat donkerder gemaakt voor leesbaarheid */
 #payload-column .header-text, #payload-column #payload-initial-message {
   font-family: Helvetica Neue for IBM, Helvetica Neue, Helvetica, Arial, sans-serif;
   font-size: 1.125rem;
-  color: #9E9E9E;
+  color: rgb(0, 0, 0);
   letter-spacing: 0.01875rem;
   padding: 0.5rem;
   padding-left: 2.5rem;
   background: #383D3E;
-}
-
-.hide {
-  display: none;
 }
 
 .payload .line-numbers, .payload .payload-text {
