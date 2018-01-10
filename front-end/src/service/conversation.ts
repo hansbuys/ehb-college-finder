@@ -31,6 +31,11 @@ export class Conversation {
 
         if (reply) {
             parser.appendToOutput(reply);
+        }
+
+        if (parser.isDialogComplete()) {
+            this.log.info("The current dialog is finished.");
+
             await this.resetStoredConversation(parser);
         }
 
@@ -105,13 +110,6 @@ export class Conversation {
     }
 
     private async generateReply(parser: Parser): Promise<string | false> {
-        if (!parser.isConversationComplete()) {
-            this.log.debug("Conversation is not yet complete, we need some more info.");
-            return false;
-        }
-
-        this.log.debug("Conversation is complete.");
-
         if (parser.isIgnoredRequest()) {
             this.log.debug("No additional info needs to be generated.");
             return false;

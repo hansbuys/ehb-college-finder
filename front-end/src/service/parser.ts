@@ -2,7 +2,7 @@ import { DictionaryOfStrings } from "./customTypes";
 
 export interface Parser {
     isValidResponse(): boolean;
-    isConversationComplete(): boolean;
+    isDialogComplete(): boolean;
     isIgnoredRequest(): boolean;
 
     getIntent(): string | false;

@@ -55,7 +55,7 @@ export class WatsonParser implements Parser {
         return parameters;
     }
 
-    public isConversationComplete(): boolean {
+    public isDialogComplete(): boolean {
         const context = this.response.context;
         const endOfConversation = context.system && context.system.branch_exited;
 
