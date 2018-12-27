@@ -19,7 +19,7 @@ export class ConversationRepository {
 
     constructor(log: Logger) {
         this.log = log;
-        this.createRedisClient();
+        this.client = this.createRedisClient();
     }
 
     public retrieve(key: string): Promise<string> {
@@ -40,22 +40,24 @@ export class ConversationRepository {
         }
     }
 
-    private createRedisClient() {
+    private createRedisClient(): redis.RedisClient {
         this.log.trace(`Creating Redis client.`);
 
         const port = process.env.REDIS_PORT || 6379;
         const host = process.env.REDIS_HOST || "localhost";
 
-        this.client = redis.createClient(
+        var client = redis.createClient(
             +port,
             host
         );
 
-        bluebird.promisifyAll(this.client);
+        bluebird.promisifyAll(client);
 
-        this.client.on("error", (err) => {
+        client.on("error", (err) => {
             this.log.error(`An error occurred in the redis client: ${err}`);
             throw new Error(err);
         });
+
+        return client;
     }
 }
