@@ -10,7 +10,7 @@ class MessageService {
         this.init();
     }
 
-    public static async sendMessage(req: any, res: Response, next: NextFunction): Promise<Response> {
+    public static async sendMessage(req: Request, res: Response, next: NextFunction): Promise<Response> {
         const log = req.log;
         log.trace("sendMessage has been called.");
 

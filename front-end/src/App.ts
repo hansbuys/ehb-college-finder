@@ -1,17 +1,15 @@
 import logger from "./logging";
-import * as Logger from "bunyan";
-import * as express from "express";
 import * as bodyParser from "body-parser";
-import * as util from "util";
+import * as express from "express";
 import { v1 as uuid } from "uuid";
-import { NextFunction, Request, Response, Router } from "express";
+import { NextFunction, Response, Application, Request } from "express";
 
 logger.info("Bootstrapping CollegeFinder Frontend application.");
 
 import messageService from "./endpoints/message";
 
 class App {
-    public express: express.Application;
+    public express: Application;
 
     constructor() {
         this.express = express();
@@ -31,14 +29,24 @@ class App {
         this.express.use(this.logErrors);
     }
 
-    private addLogging(req: any, res: any, next: any) {
+    private mountRoutes(): void {
+        const router = express.Router();
+
+        logger.debug("Mapping all routes");
+
+        this.express.use("/", router);
+        this.express.use("/api/message", messageService);
+        this.express.get("/get-env", App.getEnvironment);
+    }
+
+    private addLogging(req: Request, res: Response, next: NextFunction) {
         logger.trace("Adding per request logging available as 'req.log'.");
         req.log = logger;
 
         next();
     }
 
-    private addRequestId(req: any, res: any, next: any) {
+    private addRequestId(req: Request, res: Response, next: NextFunction) {
         logger.trace("Adding a unique request ID to the HTTP headers.");
         const requestId = uuid();
 
@@ -48,7 +56,7 @@ class App {
         next();
     }
 
-    private measureTiming(req: any, res: any, next: any) {
+    private measureTiming(req: Request, res: Response, next: NextFunction) {
         const log = req.log;
         const start = process.hrtime();
         const reqUrl = req.url;
@@ -69,7 +77,7 @@ class App {
         next();
     }
 
-    private logErrors(req: any, res: any, next: any) {
+    private logErrors(req: Request, res: Response, next: NextFunction) {
         const log = req.log;
 
         res.on("error", (err: any) => {
@@ -79,17 +87,7 @@ class App {
         next();
     }
 
-    private mountRoutes(): void {
-        const router = express.Router();
-
-        logger.debug("Mapping all routes");
-
-        this.express.use("/", router);
-        this.express.use("/api/message", messageService);
-        this.express.get("/get-env", App.getEnvironment);
-    }
-
-    private static async getEnvironment(req: any, res: Response, next: NextFunction): Promise<Response> {
+    private static async getEnvironment(req: Request, res: Response): Promise<Response> {
         const env = process.env.NODE_ENV;
 
         req.log.debug(`Returning environment: ${env}`);

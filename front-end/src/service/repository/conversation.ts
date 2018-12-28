@@ -1,6 +1,5 @@
 import * as Logger from "bunyan";
 import * as redis from "redis";
-import { promisify } from "util";
 import * as bluebird from "bluebird";
 
 declare module "redis" {

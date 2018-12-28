@@ -1,4 +1,13 @@
-import { createLogger, stdSerializers, LogLevel, levelFromName } from "bunyan";
+import { createLogger, stdSerializers, LogLevel } from "bunyan";
+import * as Logger from "bunyan";
+
+declare global {
+    namespace Express {
+        interface Request {
+             log: Logger;
+        }
+    }
+}
 
 export class Logging {
 
