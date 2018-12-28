@@ -1,17 +1,26 @@
 import { Agent } from "../agent";
 import * as Logger from "bunyan";
-import { promisify } from "util";
+import * as bluebird from "bluebird";
 import { ConversationV1 as WatsonClient } from "watson-developer-cloud";
+import { MessageParams, InputData } from "watson-developer-cloud/conversation/v1-generated";
+
+declare module "watson-developer-cloud" {
+    export interface ConversationV1 {
+        messageAsync(...args: any[]): Promise<any>;
+    }
+}
 
 export class WatsonAgent implements Agent {
 
     private log: Logger;
+    private watson: WatsonClient;
 
     constructor(log: Logger) {
         this.log = log;
+        this.watson = this.getWatson();
     }
 
-    public sendMessage(body: { context: {}, input: {} }): Promise<{}> {
+    public async sendMessage(body: { context: {}, input: InputData }): Promise<{}> {
         // this code originates from https://github.com/watson-developer-cloud/conversation-simple
         // the code has since been modified, but the principles are the same.
         const workspace = process.env.WORKSPACE_ID || "<workspace-id>";
@@ -30,23 +39,26 @@ export class WatsonAgent implements Agent {
             });
         }
 
-        const payload = {
+        const payload: MessageParams = {
             workspace_id: workspace,
             context: body.context || {},
-            input: body.input || {}
+            input: body.input || undefined
         };
 
-        const watson = this.getWatson();
-        const sendMessageAsync = promisify(watson.message);
 
         this.log.trace("Sending message to IBM Watson");
-        return sendMessageAsync.call(watson, payload).then((data: any) => {
+
+        try {
+            const data = await this.watson.messageAsync(payload);
+
             this.log.debug("IBM Watson call succesfull.");
+
             return data;
-        }).catch((err: any) => {
+        }
+        catch (err) {
             this.log.error(`IBM Watson returned an error: ${err}.`);
             return err;
-        });
+        }
     }
 
     private getWatson(): WatsonClient {
@@ -58,6 +70,6 @@ export class WatsonAgent implements Agent {
             version_date: WatsonClient.VERSION_DATE_2017_05_26
         });
 
-        return watson;
+        return bluebird.promisifyAll(watson);
     }
 }

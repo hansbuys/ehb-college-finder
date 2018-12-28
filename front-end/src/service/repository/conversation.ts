@@ -34,7 +34,7 @@ export class ConversationRepository {
     }
 
     public async unset(key: string): Promise<void> {
-        if (await this.client.exists(key) && await this.client.lpopAsync(key)) {
+        if (await this.client.existsAsync(key) && await this.client.lpopAsync(key)) {
             this.log.debug(`Removed key '${key}'`);
         }
     }
@@ -50,7 +50,7 @@ export class ConversationRepository {
             host
         );
 
-        bluebird.promisifyAll(client);
+        client = bluebird.promisifyAll(client);
 
         client.on("error", (err) => {
             this.log.error(`An error occurred in the redis client: ${err}`);
