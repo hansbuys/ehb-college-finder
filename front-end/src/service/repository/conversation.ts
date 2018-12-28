@@ -7,7 +7,6 @@ declare module "redis" {
         getAsync(key: string): Promise<string>;
         setAsync(key: string, value: string): Promise<boolean>;
         lpopAsync(key: string): Promise<boolean>;
-        existsAsync(key: string): Promise<boolean>;
     }
 }
 
@@ -34,7 +33,7 @@ export class ConversationRepository {
     }
 
     public async unset(key: string): Promise<void> {
-        if (await this.client.exists(key) && await this.client.lpopAsync(key)) {
+        if (this.client.exists(key) && await this.client.lpopAsync(key)) {
             this.log.debug(`Removed key '${key}'`);
         }
     }
