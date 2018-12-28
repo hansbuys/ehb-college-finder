@@ -1,5 +1,9 @@
 import logger from "./logging";
 import { config as dotenvConfig } from "dotenv";
+import "reflect-metadata";
+
+import "./endpoints/index";
+import "./endpoints/message";
 
 logger.debug("Loading environment variables from .env file");
 dotenvConfig();

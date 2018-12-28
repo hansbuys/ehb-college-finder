@@ -3,50 +3,41 @@ import { json } from "body-parser";
 import * as express from "express";
 import { v1 as uuid } from "uuid";
 import { NextFunction, Response, Application, Request } from "express";
+import { InversifyExpressServer, httpGet } from 'inversify-express-utils';
+import { Container } from 'inversify';
 
 logger.info("Bootstrapping CollegeFinder Frontend application.");
 
-import messageService from "./endpoints/message";
+export class App {
 
-class App {
-    public express: Application;
+    public static setup() {
+        let container = new Container();
 
-    constructor() {
-        this.express = express();
-        this.middleware();
-        this.mountRoutes();
+        let server = new InversifyExpressServer(container);
+
+        server.setConfig((app) => {
+            logger.trace("Setup middleware.");
+    
+            app.use(express.static("./public"));
+            app.use(json());
+
+            app.use(App.addLogging);
+            app.use(App.addRequestId);
+            app.use(App.measureTiming);
+            app.use(App.logErrors);
+        });
+
+        return server.build();
     }
 
-    private middleware(): void {
-        logger.trace("Setup middleware.");
-
-        this.express.use(express.static("./public"));
-        this.express.use(json());
-
-        this.express.use(this.addLogging);
-        this.express.use(this.addRequestId);
-        this.express.use(this.measureTiming);
-        this.express.use(this.logErrors);
-    }
-
-    private mountRoutes(): void {
-        const router = express.Router();
-
-        logger.debug("Mapping all routes");
-
-        this.express.use("/", router);
-        this.express.use("/api/message", messageService);
-        this.express.get("/get-env", App.getEnvironment);
-    }
-
-    private addLogging(req: Request, res: Response, next: NextFunction) {
+    private static addLogging(req: Request, res: Response, next: NextFunction) {
         logger.trace("Adding per request logging available as 'req.log'.");
         req.log = logger;
 
         next();
     }
 
-    private addRequestId(req: Request, res: Response, next: NextFunction) {
+    private static addRequestId(req: Request, res: Response, next: NextFunction) {
         logger.trace("Adding a unique request ID to the HTTP headers.");
         const requestId = uuid();
 
@@ -56,7 +47,7 @@ class App {
         next();
     }
 
-    private measureTiming(req: Request, res: Response, next: NextFunction) {
+    private static measureTiming(req: Request, res: Response, next: NextFunction) {
         const log = req.log;
         const start = process.hrtime();
         const reqUrl = req.url;
@@ -77,7 +68,7 @@ class App {
         next();
     }
 
-    private logErrors(req: Request, res: Response, next: NextFunction) {
+    private static logErrors(req: Request, res: Response, next: NextFunction) {
         const log = req.log;
 
         res.on("error", (err: any) => {
@@ -86,13 +77,6 @@ class App {
 
         next();
     }
-
-    private static async getEnvironment(req: Request, res: Response): Promise<Response> {
-        const env = process.env.NODE_ENV;
-
-        req.log.debug(`Returning environment: ${env}`);
-        return res.json(env);
-    }
 }
 
-export default new App().express;
+export default App.setup();

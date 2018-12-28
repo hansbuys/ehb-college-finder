@@ -4,10 +4,10 @@ import { promisifyAll } from "bluebird";
 
 declare module "redis" {
     export interface RedisClient {
-        getAsync(...args: any[]): Promise<string>;
-        setAsync(...args: any[]): Promise<boolean>;
+        getAsync(key: string): Promise<string>;
+        setAsync(key: string, value: string): Promise<boolean>;
         lpopAsync(key: string): Promise<boolean>;
-        existsAsync(keys: string | string[]): Promise<boolean>;
+        existsAsync(key: string): Promise<boolean>;
     }
 }
 
@@ -34,7 +34,7 @@ export class ConversationRepository {
     }
 
     public async unset(key: string): Promise<void> {
-        if (await this.client.existsAsync(key) && await this.client.lpopAsync(key)) {
+        if (await this.client.exists(key) && await this.client.lpopAsync(key)) {
             this.log.debug(`Removed key '${key}'`);
         }
     }

@@ -1,16 +1,13 @@
 import { NextFunction, Request, Response, Router } from "express";
 import logger from "../logging";
 import { Conversation } from "../service/conversation";
+import { controller, httpPost } from "inversify-express-utils";
 
-class MessageService {
-    public router: Router;
+@controller("/api")
+export class MessageService {
 
-    constructor() {
-        this.router = Router();
-        this.init();
-    }
-
-    public static async sendMessage(req: Request, res: Response, next: NextFunction): Promise<Response> {
+    @httpPost("/message")
+    public async sendMessage(req: Request, res: Response, next: NextFunction): Promise<Response> {
         const log = req.log;
         log.trace("sendMessage has been called.");
 
@@ -24,12 +21,4 @@ class MessageService {
                 return res.status(err.code || 500).json(err);
             });
     }
-
-    public init(): void {
-        logger.trace("Mapping routes for MessageService");
-
-        this.router.post("/", MessageService.sendMessage);
-    }
 }
-
-export default new MessageService().router;
