@@ -37,11 +37,19 @@ Minimum:
 
 ## Installation
 
+Required for ElasticSearch configuration
+$ sudo sysctl -w vm.max_map_count=262144
+
 Building the image  
 $ docker-compose build  
   
 Start the services  
 $ docker-compose up  
+
+Or all in one:
+$ docker-compose up --build
+add -d to run in daemon mode
+$ docker-compose up --build -d
   
 Start the services in debug mode  
 $ docker-compose -f docker-compose.yml -f docker-compose.debug.yml up  

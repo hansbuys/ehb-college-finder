@@ -1,0 +1,28 @@
+{
+  "name": "college-finder",
+  "version": "1.0.0",
+  "description": "This service utilizes natural language processing to recognize the intent of a user and formulates an appropriate response.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start-data-service": "cd data-service && npm start",
+    "start-front-end": "cd front-end && npm start",
+    "build-data-service": "cd data-service && npm run build",
+    "build-front-end": "cd front-end && npm run build",
+    "start": "concurrently --kill-others \"npm run start-data-service\" \"npm run start-front-end\"",
+    "build": "npm run build-data-service && npm run build-front-end"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hansbuys/ehb-college-finder.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hansbuys/ehb-college-finder/issues"
+  },
+  "homepage": "https://github.com/hansbuys/ehb-college-finder#readme",
+  "dependencies": {
+    "concurrently": "^4.1.0"
+  }
+}
