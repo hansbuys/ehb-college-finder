@@ -1,5 +1,5 @@
 import logger from "./logging";
-import * as bodyParser from "body-parser";
+import { json } from "body-parser";
 import * as express from "express";
 import { v1 as uuid } from "uuid";
 import { NextFunction, Response, Application, Request } from "express";
@@ -21,7 +21,7 @@ class App {
         logger.trace("Setup middleware.");
 
         this.express.use(express.static("./public"));
-        this.express.use(bodyParser.json());
+        this.express.use(json());
 
         this.express.use(this.addLogging);
         this.express.use(this.addRequestId);

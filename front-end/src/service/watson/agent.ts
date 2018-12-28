@@ -1,8 +1,8 @@
 import { Agent } from "../agent";
 import * as Logger from "bunyan";
-import * as bluebird from "bluebird";
 import { ConversationV1 as WatsonClient } from "watson-developer-cloud";
 import { MessageParams, InputData } from "watson-developer-cloud/conversation/v1-generated";
+import { promisifyAll } from "bluebird";
 
 declare module "watson-developer-cloud" {
     export interface ConversationV1 {
@@ -17,7 +17,7 @@ export class WatsonAgent implements Agent {
 
     constructor(log: Logger) {
         this.log = log;
-        this.watson = this.getWatson();
+        this.watson = this.buildWatsonClient();
     }
 
     public async sendMessage(body: { context: {}, input: InputData }): Promise<{}> {
@@ -61,7 +61,7 @@ export class WatsonAgent implements Agent {
         }
     }
 
-    private getWatson(): WatsonClient {
+    private buildWatsonClient(): WatsonClient {
         this.log.trace("Initializing IBM Watson client");
 
         const watson = new WatsonClient({
@@ -70,6 +70,6 @@ export class WatsonAgent implements Agent {
             version_date: WatsonClient.VERSION_DATE_2017_05_26
         });
 
-        return bluebird.promisifyAll(watson);
+        return promisifyAll(watson);
     }
 }

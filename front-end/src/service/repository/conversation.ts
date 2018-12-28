@@ -1,6 +1,6 @@
 import * as Logger from "bunyan";
-import * as redis from "redis";
-import * as bluebird from "bluebird";
+import { RedisClient, createClient } from "redis";
+import { promisifyAll } from "bluebird";
 
 declare module "redis" {
     export interface RedisClient {
@@ -12,13 +12,13 @@ declare module "redis" {
 }
 
 export class ConversationRepository {
-    private client: redis.RedisClient;
+    private client: RedisClient;
 
     private log: Logger;
 
     constructor(log: Logger) {
         this.log = log;
-        this.client = this.createRedisClient();
+        this.client = this.buildRedisClient();
     }
 
     public retrieve(key: string): Promise<string> {
@@ -39,18 +39,18 @@ export class ConversationRepository {
         }
     }
 
-    private createRedisClient(): redis.RedisClient {
+    private buildRedisClient(): RedisClient {
         this.log.trace(`Creating Redis client.`);
 
         const port = process.env.REDIS_PORT || 6379;
         const host = process.env.REDIS_HOST || "localhost";
 
-        var client = redis.createClient(
+        var client = createClient(
             +port,
             host
         );
 
-        client = bluebird.promisifyAll(client);
+        client = promisifyAll(client);
 
         client.on("error", (err) => {
             this.log.error(`An error occurred in the redis client: ${err}`);
